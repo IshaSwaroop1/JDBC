@@ -1,0 +1,468 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 8.0.30 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database employee;
+ERROR 1007 (HY000): Can't create database 'employee'; database exists
+mysql> use employee;
+Database changed
+mysql> CREATE TABLE department(dep_id int,dep_name VARCHAR(20),dep_location VARCHAR(15));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE salary_grade(grade int,min_salary int,max_salary int);
+Query OK, 0 rows affected (0.02 sec)
+use employee;
+Database changed
+mysql> SELECT emp_id,
+    ->        salary,
+    ->        commission
+    -> FROM employees;
++--------+---------+------------+
+| emp_id | salary  | commission |
++--------+---------+------------+
+|  65446 | 2957.00 |    2001.00 |
+|  66928 | 2750.00 |    3001.00 |
+|  67832 | 2550.00 |    1001.00 |
+|  68319 | 6000.00 |    1001.00 |
+|  68903 |    NULL |       NULL |
++--------+---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT dep_id,
+    ->                 job_name
+    -> FROM employees ;
++--------+-----------+
+| dep_id | job_name  |
++--------+-----------+
+|      4 | Trainee   |
+|      2 | MANAGER   |
+|      3 | MANAGER   |
+|      1 | PRESIDENT |
+|   NULL | PRESIDENT |
++--------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE dep_id NOT IN (2001);
++--------+----------+-----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name  | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+-----------+------------+------------+---------+------------+--------+
+|  65446 | JONAS    | Trainee   |      68319 | 1991-04-02 | 2957.00 |    2001.00 |      4 |
+|  66928 | BLAZE    | MANAGER   |      68319 | 1991-05-01 | 2750.00 |    3001.00 |      2 |
+|  67832 | CLARE    | MANAGER   |      68319 | 1991-06-09 | 2550.00 |    1001.00 |      3 |
+|  68319 | KAYLING  | PRESIDENT |       NULL | 1991-11-18 | 6000.00 |    1001.00 |      1 |
++--------+----------+-----------+------------+------------+---------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE hire_date<('1991-1-1');
+Empty set (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,,hire_date,salary,commission,dept_id)VALUES(67890,'MANAS','ENGINEER',68319,'1991-1-1',2890.00,1001.00,6);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',hire_date,salary,commission,dept_id)VALUES(67890,'MANAS','ENGINEER',68319,'1991' at line 1
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(67890,'MANAS','ENGINEER',68319,'1991-01-01',2890.00,1001.00,6);
+Query OK, 1 row affected (0.00 sec)
+
+mysql>  SELECT *
+    ->     -> FROM employees
+    ->
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> FROM employees' at line 2
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE hire_date('1991-01-01');
+ERROR 1305 (42000): FUNCTION employee.hire_date does not exist
+mysql> SELECT
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE hire_date<('1991-1-1');
+Empty set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE hire_date<('1991-01-01');
+Empty set (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(67899,'RISHI','ANALYST',68319,'1991-01-01',2890.00,1001.00,7);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(68789,'YASH',
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(68789,'YASH','ANALYST',68319,'1991-01-01',2990.00,2001.00,8);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,comission,dep_id)VALUES(67890,'DEV','ANALYST',68319,'1991-01-01',2678.00,2001.00,9);
+ERROR 1054 (42S22): Unknown column 'comission' in 'field list'
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(67890,'DEV','ANALYST',68319,'1991-01-01',2678.00,2001.00,9);
+ERROR 1062 (23000): Duplicate entry '67890' for key 'employees.PRIMARY'
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(67777,'DEV','ANALYST',68319,'1991-01-01',2678.00,2001.00,9);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT avg(salary)
+    -> FROM employees
+    -> WHERE job_name = 'ANALYST';
++-------------+
+| avg(salary) |
++-------------+
+| 2852.666667 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> CREATE TABLE employees(emp_id int,emp_name VARCHAR(15),job_name VARCHAR(10),manager_id int,hire_date DATE,salary decimal (10,2) ,commission decimal(7,2),dept_id int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> ALTER TABLE department ADD PRIMAY KEY(dep_id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'KEY(dep_id)' at line 1
+mysql> ALTER TABLE department ADD PRIMARY KEY (dep_id);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE salary_grade ADD PRIMARY KEY (grade);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE employees ADD PRIMARY KEY(emp_id);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE employees ADD FOREIGN KEY (emp_id) REFERENCES department(dep_id);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(68319,'KAYLING','PRESIDENT',NULL1991-11-18 | 6000.00 |
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(68319,'KAYLING','PRESIDENT',NULL,1991-11-18,6000.00,1001);
+ERROR 1054 (42S22): Unknown column 'dep_id' in 'field list'
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(68319,'KAYLING','PRESIDENT',NULL,1991-11-18,6000.00,1001,1);
+ERROR 1054 (42S22): Unknown column 'dep_id' in 'field list'
+mysql> Alter table employees RENAME dept_id TO dep_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO dep_id' at line 1
+mysql> Alter table employees RENAME COLUMN dept_id TO dep_id;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>  INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(68319,'KAYLING','PRESIDENT',NULL,1991-11-18,6000.00,1001);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql>  INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(68319,'KAYLING','PRESIDENT',NULL,1991-11-18,6000.00,1001,1);
+ERROR 1292 (22007): Incorrect date value: '1962' for column 'hire_date' at row 1
+mysql>  INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(68319,'KAYLING','PRESIDENT',NULL,'1991-11-18',6000.0,1001,1);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`employee`.`employees`, CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`emp_id`) REFERENCES `department` (`dep_id`))
+mysql> ALTER TABLE employees DROP FOREIGN KEY dep_id;
+ERROR 1091 (42000): Can't DROP 'dep_id'; check that column/key exists
+mysql> SELECT *FROM emplyoyees;
+ERROR 1146 (42S02): Table 'employee.emplyoyees' doesn't exist
+mysql> SELECT *FROM employees;
+Empty set (0.00 sec)
+
+mysql>  ALTER TABLE employees DROP FOREIGN KEY emp_id;
+ERROR 1091 (42000): Can't DROP 'emp_id'; check that column/key exists
+mysql> DROP TABLE employees;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE employees(emp_id int,emp_name VARCHAR(15),job_name VARCHAR(10),manager_id int,hire_date DATE,salary decimal (10,2) ,commission decimal(7,2),dep_id int);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> ALTER TABLE employees ADD PRIMARY KEY(emp_id);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(68319,'KAYLING','PRESIDENT',NULL,'1991-11-18',6000.0,1001,1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(66928,'BLAZE','MANAGER',68319,'1991-05-01',2750.0,3001,2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(67832,'CLARE','MANAGER'68319,'1991-06-09',2550.00,1001,3);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '68319,'1991-06-09',2550.00,1001,3)' at line 1
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(678323,'CLARE','MANAGER',68319,'1991-06-09',2550.00,1001,3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(65446,'JONAS','MANAGER',68319,'1991-04-02',2957.00,2001,4);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT SALARY FROM employees;
++---------+
+| SALARY  |
++---------+
+| 2957.00 |
+| 2750.00 |
+| 2550.00 |
+| 6000.00 |
++---------+
+4 rows in set (0.00 sec)
+
+mysql>l> select emp_id,emp_name,salary,DATE_FORMAT(hire_date,'%M %d,%Y')AS 'hire_date' from employees;
++--------+----------+---------+------------------+
+| emp_id | emp_name | salary  | hire_date        |
++--------+----------+---------+------------------+
+|  65446 | JONAS    | 2957.00 | April 02,1991    |
+|  66928 | BLAZE    | 2750.00 | May 01,1991      |
+|  67832 | CLARE    | 2550.00 | June 09,1991     |
+|  68319 | KAYLING  | 6000.00 | November 18,1991 |
+|  68903 | POOJA    |    NULL | NULL             |
++--------+----------+---------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT length(trim(emp_name))
+    -> FROM employees;
++------------------------+
+| length(trim(emp_name)) |
++------------------------+
+|                      5 |
+|                      5 |
+|                      5 |
+|                      7 |
+|                      5 |
++------------------------+
+5 rows in set (0.00 sec)
+use employee;
+Database changed
+mysql> *INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUE(67890,'BLAZE','ANALYST',68319,'1999-02-03',34567.00,678.00,8);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,comm' at line 1
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUE(67890,'BLAZE','ANALYST',68319,'1999-02-03',34567.00,678.00,8);
+ERROR 1062 (23000): Duplicate entry '67890' for key 'employees.PRIMARY'
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUE(67888,'BLAZE','ANALYST',68319,'1991-02-03'.34567.00,678.00,8);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.34567.00,678.00,8)' at line 1
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id) VALUES(678323,'CLARE','MANAGER',68319,'1991-06-09',2550.00,1001,3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,comission,dep_id)VALUES(678822,'BLAZE','ANALYST',68319,'1991-09-03',2678.00,2002,8);
+ERROR 1054 (42S22): Unknown column 'comission' in 'field list'
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(678822,'BLAZE','ANALYST',68319,'1991-09-03',2678.00,2002,8);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE emp_name = 'BLAZE';
++--------+----------+----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+----------+------------+------------+---------+------------+--------+
+|  66928 | BLAZE    | MANAGER  |      68319 | 1991-05-01 | 2750.00 |    3001.00 |      2 |
+| 678822 | BLAZE    | ANALYST  |      68319 | 1991-09-03 | 2678.00 |    2002.00 |      8 |
++--------+----------+----------+------------+------------+---------+------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> From the following table, write a SQL query to find those employees whose
+    -> commission is more than their salary. Return complete information about the
+    -> employees.
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'From the following table, write a SQL query to find those employees whose
+commi' at line 1
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE commission>salary;
++--------+----------+----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+----------+------------+------------+---------+------------+--------+
+|  66928 | BLAZE    | MANAGER  |      68319 | 1991-05-01 | 2750.00 |    3001.00 |      2 |
++--------+----------+----------+------------+------------+---------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE (1.25*salary) > 3000;
++--------+----------+-----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name  | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+-----------+------------+------------+---------+------------+--------+
+|  65446 | JONAS    | Trainee   |      68319 | 1991-04-02 | 2957.00 |    2001.00 |      4 |
+|  66928 | BLAZE    | MANAGER   |      68319 | 1991-05-01 | 2750.00 |    3001.00 |      2 |
+|  67777 | DEV      | ANALYST   |      68319 | 1991-01-01 | 2678.00 |    2001.00 |      9 |
+|  67832 | CLARE    | MANAGER   |      68319 | 1991-06-09 | 2550.00 |    1001.00 |      3 |
+|  67890 | MANAS    | ENGINEER  |      68319 | 1991-01-01 | 2890.00 |    1001.00 |      6 |
+|  67899 | RISHI    | ANALYST   |      68319 | 1991-01-01 | 2890.00 |    1001.00 |      7 |
+|  68319 | KAYLING  | PRESIDENT |       NULL | 1991-11-18 | 6000.00 |    1001.00 |      1 |
+|  68789 | YASH     | ANALYST   |      68319 | 1991-01-01 | 2990.00 |    2001.00 |      8 |
+| 678323 | CLARE    | MANAGER   |      68319 | 1991-06-09 | 2550.00 |    1001.00 |      3 |
+| 678822 | BLAZE    | ANALYST   |      68319 | 1991-09-03 | 2678.00 |    2002.00 |      8 |
++--------+----------+-----------+------------+------------+---------+------------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT emp_name
+    -> FROM employees
+    -> WHERE length(emp_name)=6;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(68799,'ANSHIK','TRAINEE',68319,'2000-09-05',45000.00,3001,9);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT emp_name
+    -> FROM employees
+    -> WHERE length(emp_name)=6;
++----------+
+| emp_name |
++----------+
+| ANSHIK   |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE to_char(hire_date, 'mon')='jan';
+ERROR 1305 (42000): FUNCTION employee.to_char does not exist
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE month(joining_date)='01';
+ERROR 1054 (42S22): Unknown column 'joining_date' in 'where clause'
+mysql> SELECT *
+    -> FROM employee
+    -> WHERE month(hire_date)='01';
+ERROR 1146 (42S02): Table 'employee.employee' doesn't exist
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE month(hire_date)='01';
++--------+----------+----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+----------+------------+------------+---------+------------+--------+
+|  67777 | DEV      | ANALYST  |      68319 | 1991-01-01 | 2678.00 |    2001.00 |      9 |
+|  67890 | MANAS    | ENGINEER |      68319 | 1991-01-01 | 2890.00 |    1001.00 |      6 |
+|  67899 | RISHI    | ANALYST  |      68319 | 1991-01-01 | 2890.00 |    1001.00 |      7 |
+|  68789 | YASH     | ANALYST  |      68319 | 1991-01-01 | 2990.00 |    2001.00 |      8 |
++--------+----------+----------+------------+------------+---------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT e.emp_name || ' works for ' || m.emp_name
+    -> FROM employees e,
+    ->      employees m
+    -> WHERE e.manager_id = m.emp_id;
++-------------------------------------------+
+| e.emp_name || ' works for ' || m.emp_name |
++-------------------------------------------+
+|                                         0 |
+|                                         0 |
+|                                         0 |
+|                                         0 |
+|                                         0 |
+|                                         0 |
+|                                         0 |
+|                                         0 |
+|                                         0 |
+|                                         0 |
++-------------------------------------------+
+10 rows in set, 23 warnings (0.00 sec)
+
+mysql> select concat(e.emp_name," " ,'works for'," ",m.emp_name)from employees e,employees m where e.manager_id=m.emp_id;
++----------------------------------------------------+
+| concat(e.emp_name," " ,'works for'," ",m.emp_name) |
++----------------------------------------------------+
+| JONAS works for KAYLING                            |
+| BLAZE works for KAYLING                            |
+| DEV works for KAYLING                              |
+| CLARE works for KAYLING                            |
+| MANAS works for KAYLING                            |
+| RISHI works for KAYLING                            |
+| YASH works for KAYLING                             |
+| ANSHIK works for KAYLING                           |
+| CLARE works for KAYLING                            |
+| BLAZE works for KAYLING                            |
++----------------------------------------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE job_name = 'CLERK';
+Empty set (0.00 sec)
+
+mysql> INSERT INTO employees(emp_id,emp_name,job_name,manager_id,hire_date,salary,commission,dep_id)VALUES(678444,'SAMRIDHI','CLERK',68319,'2006-09-08',4500.00,4001,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE job_name='CLERK';
++--------+----------+----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+----------+------------+------------+---------+------------+--------+
+| 678444 | SAMRIDHI | CLERK    |      68319 | 2006-09-08 | 4500.00 |    4001.00 |     10 |
++--------+----------+----------+------------+------------+---------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE EXTRACT(YEAR
+    ->               FROM age(CURRENT_DATE, hire_date)) > 27;
+ERROR 1305 (42000): FUNCTION employee.age does not exist
+mysql> SELECT emp_name,
+    ->        job_name,
+    ->        salary
+    -> FROM employees
+    -> WHERE job_name = 'ANALYST';
++----------+----------+---------+
+| emp_name | job_name | salary  |
++----------+----------+---------+
+| DEV      | ANALYST  | 2678.00 |
+| RISHI    | ANALYST  | 2890.00 |
+| YASH     | ANALYST  | 2990.00 |
+| BLAZE    | ANALYST  | 2678.00 |
++----------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT emp_id,emp_name,salary ,DATE_FORMAT(hire_date,'%M %d %Y') AS 'hire_date' from employees;
++--------+----------+----------+-------------------+
+| emp_id | emp_name | salary   | hire_date         |
++--------+----------+----------+-------------------+
+|  65446 | JONAS    |  2957.00 | April 02 1991     |
+|  66928 | BLAZE    |  2750.00 | May 01 1991       |
+|  67777 | DEV      |  2678.00 | January 01 1991   |
+|  67832 | CLARE    |  2550.00 | June 09 1991      |
+|  67890 | MANAS    |  2890.00 | January 01 1991   |
+|  67899 | RISHI    |  2890.00 | January 01 1991   |
+|  68319 | KAYLING  |  6000.00 | November 18 1991  |
+|  68789 | YASH     |  2990.00 | January 01 1991   |
+|  68799 | ANSHIK   | 45000.00 | September 05 2000 |
+|  68903 | POOJA    |     NULL | NULL              |
+| 678323 | CLARE    |  2550.00 | June 09 1991      |
+| 678444 | SAMRIDHI |  4500.00 | September 08 2006 |
+| 678822 | BLAZE    |  2678.00 | September 03 1991 |
++--------+----------+----------+-------------------+
+13 rows in set (0.00 sec)
+
+mysql> SELECT e.emp_id,
+    ->        e.emp_name,
+    ->        e.hire_date,
+    ->        e.salary
+    -> FROM employees e
+    -> WHERE hire_date <'1991-04-01';
++--------+----------+------------+---------+
+| emp_id | emp_name | hire_date  | salary  |
++--------+----------+------------+---------+
+|  67777 | DEV      | 1991-01-01 | 2678.00 |
+|  67890 | MANAS    | 1991-01-01 | 2890.00 |
+|  67899 | RISHI    | 1991-01-01 | 2890.00 |
+|  68789 | YASH     | 1991-01-01 | 2990.00 |
++--------+----------+------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT e.emp_name,
+    ->        e.job_name
+    -> FROM employees e
+    -> WHERE manager_id IS NULL;
++----------+-----------+
+| emp_name | job_name  |
++----------+-----------+
+| KAYLING  | PRESIDENT |
++----------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM employees
+    -> WHERE hire_date = '1991-05-01';
++--------+----------+----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+----------+------------+------------+---------+------------+--------+
+|  66928 | BLAZE    | MANAGER  |      68319 | 1991-05-01 | 2750.00 |    3001.00 |      2 |
++--------+----------+----------+------------+------------+---------+------------+--------+
+1 row in set (0.00 sec)
